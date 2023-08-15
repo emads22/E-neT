@@ -1,0 +1,23 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div id="temp-message">
+    </div>
+
+    <div id="posts-view">
+    </div>
+
+    <div id="create-view">
+        <!-- <h3>New Post</h3> -->
+        <form id="create-form" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <h4>New Post</h4> 
+                <textarea class="form-control" id="create-content" placeholder="Content" rows="6" cols="40"></textarea>
+            </div> 
+            
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </div>
+{% endblock %}
