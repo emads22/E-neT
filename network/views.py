@@ -159,16 +159,30 @@ def profile(request, user_id):
     profile_user = User.objects.get(pk=user_id)
     profile_user_posts = profile_user.user_posts.order_by("-date_posted").all()
 
-    # followers = profile_user.followers.all()
-    # print(type(followers))
-    # print(followers, followers.count(), sep="***")
-    
     return render(request, "network/profile.html", context={
         'following': profile_user.following.all(),
         'followers': profile_user.followers.all(),
         'page': pagination(request, profile_user_posts),
         'profile_user': profile_user,
     })
+
+
+def follow_unfollow(request, user_id, action):
+    profile_user = User.objects.get(pk=user_id)
+    current_user = request.user
+
+    if action == 'follow':
+        profile_user.followers.add(current_user)
+    # otherwise action == 'unfollow'
+    else:
+        profile_user.followers.remove(current_user)
+
+    # # redirect to user profile page (same page) using the arg 'user_id'
+    # return HttpResponseRedirect(reverse('profile', args=[user_id]))
+
+    # alternatively: referring URL is the URL of the page that made the request (profile page)
+    referring_URL = request.META.get('HTTP_REFERER')
+    return HttpResponseRedirect(referring_URL)
 
 
 @login_required

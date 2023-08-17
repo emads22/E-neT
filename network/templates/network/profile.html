@@ -21,10 +21,17 @@
         FOLLOWING: {{following.count}}
         <br>
         {% if user != profile_user %}
+            <!-- check if current user in followers list of this profile user or not to know which button to display ('Follow' or 'Unfollow') -->
             {% if user in followers %}
-                <button>UNFOLLOW</button>
+            <form action="{% url 'follow_unfollow' user_id=profile_user.id action='unfollow' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-lg btn-primary">UNFOLLOW</button>
+            </form>
             {% else %}
-                <button>FOLLOW</button>
+            <form action="{% url 'follow_unfollow' user_id=profile_user.id action='follow' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-lg btn-primary">FOLLOW</button>
+            </form>
             {% endif %}
         {% endif %}
         <br>

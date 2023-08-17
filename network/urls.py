@@ -13,5 +13,6 @@ urlpatterns = [
     path("posts/", views.index, name="all_posts"),
     path("profile/<int:user_id>", views.profile, name="profile"),
     # path("posts/<int:post_id>", views.post, name="post"),
+    path("profile/<int:user_id>/<str:action>", views.follow_unfollow, name="follow_unfollow"),
     
 ]
