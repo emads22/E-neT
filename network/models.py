@@ -14,7 +14,7 @@ class Post(models.Model):
     likes = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'"{self.content}" -- (posted on {self.date_posted.strftime("%b. %d, %Y, %I:%M %p")})'
+        return f'"{self.content}" -- (posted on {self.date_posted.strftime("%b. %d, %Y, %I:%M %p")} by {self.author})'
     
 
 class Comment(models.Model):

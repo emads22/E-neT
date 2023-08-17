@@ -120,3 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# This setting specifies the URL where users should be redirected when they are not authenticated and try to access a protected view.
+LOGIN_URL = 'login'
