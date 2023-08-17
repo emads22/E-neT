@@ -21,7 +21,7 @@
         FOLLOWING: {{following.count}}
         <br>
         {% if user != profile_user %}
-            {% if profile_user in following %}
+            {% if user in followers %}
                 <button>UNFOLLOW</button>
             {% else %}
                 <button>FOLLOW</button>

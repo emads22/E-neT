@@ -36,11 +36,7 @@
         {% for post in page %}
             <div class="card">
                 <div class="card-header">
-                    {% if user.is_authenticated %}
-                        <h5>@<a href="{% url 'profile' post.author.id %}">{{post.author}}</a></h5>
-                    {% else %}
-                        <h5>@{{post.author}}</h5>
-                    {% endif %}
+                    <h5>@<a href="{% url 'profile' post.author.id %}">{{post.author}}</a></h5>
                 </div>
                 <div class="card-body">
                   <blockquote class="blockquote mb-0">

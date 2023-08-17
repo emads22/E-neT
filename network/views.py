@@ -29,7 +29,6 @@ def index(request):
     all_posts = Post.objects.order_by("-date_posted").all()
     
     return render(request, "network/index.html", context={
-        # 'posts': all_posts,
         'page': pagination(request, all_posts),
         # when clicking 'All Posts' go to index page (where all posts displayed) but remove create post div even if user is logged in
         'creation_available': False if param_all else True,
@@ -157,14 +156,18 @@ def create(request):
 
 @login_required
 def profile(request, user_id):
-    user = User.objects.get(pk=user_id)
-    user_posts = user.user_posts.order_by("-date_posted").all()
+    profile_user = User.objects.get(pk=user_id)
+    profile_user_posts = profile_user.user_posts.order_by("-date_posted").all()
 
+    # followers = profile_user.followers.all()
+    # print(type(followers))
+    # print(followers, followers.count(), sep="***")
+    
     return render(request, "network/profile.html", context={
-        'following': user.followers,
-        'followers': user.following,
-        'page': pagination(request, user_posts),
-        'profile_user': user,
+        'following': profile_user.following.all(),
+        'followers': profile_user.followers.all(),
+        'page': pagination(request, profile_user_posts),
+        'profile_user': profile_user,
     })
 
 
