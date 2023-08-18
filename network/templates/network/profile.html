@@ -1,8 +1,5 @@
 {% extends "network/layout.html" %}
 
-{% block script %}
-{% endblock %}
-
 {% block body %}
     
     {% if messages %}
@@ -35,14 +32,14 @@
             {% endif %}
         {% endif %}
         <br>
-        <!-- 'page.object_list' instead of 'posts' to get the number of posts set per page -->
-        {% for post in page.object_list %}
-            <div class="card">                
+        <!-- 'page' or 'page.object_list' instead of 'posts' to get the number of posts set per page -->
+        {% for post in page %}
+            <div class="card">
                 <div class="card-header">
-                    <h5>@{{post.author}}</a></h5>
-                </div>                
+                    <h5>@{{post.author}}</h5>
+                </div>
                 <div class="card-body">
-                  <blockquote class="blockquote mb-0">
+                    <blockquote class="blockquote mb-0">
                     <p class="list-inline-item">
                         {{post.content}}
                     </p>
@@ -62,7 +59,7 @@
                         <p class="list-inline-item">Likes {{post.likes}}</p> 
                         <a href="#" class="list-inline-item">Comments</a>
                     </footer>
-                  </blockquote>
+                    </blockquote>
                 </div>
             </div>
         {% endfor %}

@@ -1,34 +1,16 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <!-- display messages using the messages tools in Django -->
+    
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
             {% endfor %}
         </ul>
-        <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 2 seconds here -->
-        <meta http-equiv="refresh" content="2;url={% url 'index' %}">
     {% endif %}
 
-    {% if user.is_authenticated and creation_available %}
-        <div id="create-view">
-            <!-- <h3>New Post</h3> -->
-            <form id="create-form" action="{% url 'create' %}" method="post">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <h4>New Post</h4> 
-                    <textarea class="form-control" id="create-content" placeholder="Content" rows="6" cols="40" name="content"></textarea>
-                </div> 
-                
-                <button type="submit" class="btn btn-primary">Post</button>
-            </form>
-        </div>
-    {% else %}
-        <h1>All Posts</h1>
-    {% endif %}
+    <h1>Following</h1>
 
     <div>
         <!-- 'page' or 'page.object_list' instead of 'posts' to get the number of posts set per page -->
@@ -39,13 +21,13 @@
                 </div>
                 <div class="card-body">
                   <blockquote class="blockquote mb-0">
-                    <p>
-                        <span class="list-inline-item">{{post.content}}</span>                        
-                        {% if user.is_authenticated and user == post.author %}
-                            <a href="#" class="list-inline-item edit-link">Edit</a>
-                        {% endif %}
+                    <p class="list-inline-item">
+                        {{post.content}}
                     </p>
-                    
+                    <span class="list-inline-item">❤</span>
+                    {% if user.is_authenticated and user == post.author %}
+                        <a href="#" class="list-inline-item">Edit</a>
+                    {% endif %}
                     <footer class="blockquote-footer">                        
                         <span>
                             {% if edited %}
@@ -55,7 +37,6 @@
                             {% endif %}
                         </span>
                         <cite title="Source Title">{{post.date_posted}}</cite> <br>
-                        <span class="list-inline-item">❤</span>
                         <p class="list-inline-item">Likes {{post.likes}}</p> 
                         <a href="#" class="list-inline-item">Comments</a>
                     </footer>

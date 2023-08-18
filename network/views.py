@@ -167,6 +167,7 @@ def profile(request, user_id):
     })
 
 
+@login_required
 def follow_unfollow(request, user_id, action):
     profile_user = User.objects.get(pk=user_id)
     current_user = request.user
@@ -183,6 +184,18 @@ def follow_unfollow(request, user_id, action):
     # alternatively: referring URL is the URL of the page that made the request (profile page)
     referring_URL = request.META.get('HTTP_REFERER')
     return HttpResponseRedirect(referring_URL)
+
+
+@login_required
+def following(request):
+    current_user = request.user
+    followed_users = current_user.following.all()
+    # 'author__in' in Django is used to filter querysets based on a list of values (like list of authors instead of passing one author)
+    followed_users_posts = Post.objects.filter(author__in=followed_users).order_by("-date_posted").all()
+    
+    return render(request, "network/following.html", context={
+        'page': pagination(request, followed_users_posts),
+    })
 
 
 @login_required
