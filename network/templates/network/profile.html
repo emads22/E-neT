@@ -40,25 +40,43 @@
                 </div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
-                    <p class="list-inline-item">
-                        {{post.content}}
-                    </p>
-                    <span class="list-inline-item">❤</span>
-                    {% if user.is_authenticated and user == post.author %}
-                        <a href="#" class="list-inline-item">Edit</a>
-                    {% endif %}
-                    <footer class="blockquote-footer">                        
-                        <span>
-                            {% if edited %}
-                                edited on
-                            {% else %}
-                                posted on 
+                        <p>
+                            <span id="post_{{post.id}}" class="list-inline-item">{{post.content}}</span>                        
+                            {% if user.is_authenticated and user == post.author %}
+                                <!-- Link trigger modal, add id related to the post in order to catch it in js script -->                            
+                                <a href="#" id="editLink_{{post.id}}" class="list-inline-item edit-link" data-bs-toggle="modal" data-bs-target="#editModal_{{post.id}}">
+                                    Edit
+                                </a>
+                                
+                                <!-- Modal -->
+                                <div class="modal fade" id="editModal_{{post.id}}" tabindex="-1" aria-labelledby="editModalLabel_{{post.id}}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="editModalLabel_{{post.id}}">Edit this post</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <textarea rows="3" cols="48" id="post_{{post.id}}_edit"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <!-- To ensure that we always retrieve the correct CSRF token and not the initial one, we add a data attribute to  save button where we can store the CSRF token value -->
+                                        <button type="button" id="save_btn_{{post.id}}" class="btn btn-primary" data-csrf="{{ csrf_token }}">Save changes</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
                             {% endif %}
-                        </span>
-                        <cite title="Source Title">{{post.date_posted}}</cite> <br>
-                        <p class="list-inline-item">Likes {{post.likes}}</p> 
-                        <a href="#" class="list-inline-item">Comments</a>
-                    </footer>
+                        </p>
+                        
+                        <footer class="blockquote-footer">                        
+                            <span>posted on </span>
+                            <cite title="Source Title">{{post.date_posted}} {% if post.edited %}[Edited on {{post.edited_on}}]{% endif %}</cite> <br>
+                            <span class="list-inline-item">❤</span>
+                            <p class="list-inline-item">Likes {{post.likes}}</p> 
+                            <a href="#" class="list-inline-item">Comments</a>
+                        </footer>
                     </blockquote>
                 </div>
             </div>

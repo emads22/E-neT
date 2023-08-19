@@ -1,48 +1,63 @@
 document.addEventListener("DOMContentLoaded", function() {
-    edit_post();
+    handle_post_editing();
 })
 
 
-function edit_post() {
-
-    const text_box = document.createElement("textarea");
-    text_box.id = "post-content-edit";
-    text_box.className = "list-inline-item";
-    const save_btn = document.createElement("button");
-    save_btn.className = "btn btn-primary list-inline-item";    
-    save_btn.id = "save-btn";
-    save_btn.textContent = "Save";
-
-    const edit_link = document.querySelector(".edit-link");
-    edit_link.onclick = (event) => {
-        // prevent the default behavior of <a> to not scroll to top page (or redirect somewhere)
-        event.preventDefault(); 
-        // navigate to parent of the 'edit' link (<p>)
-        const p_section = event.target.parentElement;
-        // get the first child of this parent <p> which is the <span> that holds the post content
-        const post_content = p_section.firstElementChild;
-
-        console.log(post_content);
-
-        // add the post content text to the new textarea value where the edit is happening
-        text_box.value = post_content.textContent;
-        // insert the new elements ('text_box' and 'save_btn') before the first child 'post_content'
-        p_section.insertBefore(save_btn, post_content);
-        p_section.insertBefore(text_box, post_content);
-        // p_section.insertBefore(save_btn, post_content);
-        // .insertAdjacentElement("beforebegin", text_box);
-        p_section.insertAdjacentElement("beforebegin", save_btn);
-        post_content.style.display = "none";
-        event.target.style.display = "none";
-
-        save_btn.onclick = update_post(post_content);
-        
-    }
+function handle_post_editing() {
+    // catch all posts with edit option
+    const post_links = document.querySelectorAll(".edit-link");
+    post_links.forEach(post_link => {
+        // console.log(post_link.id, post_link.textContent);
+        post_link.addEventListener("click", () => {
+            // extract post ID from the link ID (its 'editLink_{ID}')
+            const post_id = post_link.id.split("_")[1]; 
+            edit_post(post_id);
+        })
+    })
 }
 
 
+function edit_post(post_id) {
+    const post_content = document.getElementById(`post_${post_id}`).textContent
+    const content_textarea = document.getElementById(`post_${post_id}_edit`);
+    const save_btn = document.getElementById(`save_btn_${post_id}`);
+    // populate the textarea with old content
+    content_textarea.value = post_content;
+    // declare this variable here to be accessible in this scope not only below under (like global var)
+    let new_content = "";
+    // on change
+    content_textarea.addEventListener("change", function() {
+        // update new_content with latest input value ('this' is event.target here which is the textarea)
+        new_content = this.value;
+    })
 
-function update_post(content_element) {
-    content_element.textContent = "HELLO";
-    // content_element.style.display = "block";
+    save_btn.addEventListener("click", () => {
+        // must include the CSRF token in fetch request headers (CSRF protection). This is essential for any non-GET requests to Django views.
+        // so access this data attribute to retrieve CSRF token without relying on searching DOM and avoid catching everytime initial token only 
+        const csrfToken = save_btn.getAttribute('data-csrf');
+        // set the base url
+        const base_url = "http://127.0.0.1:8000";
+        // construct the URL to avoid concatenating urls and getting errors specially when switching between several pages
+        const url = `${base_url}/posts/edit/${post_id}`;
+
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({
+                content: new_content,
+            }),
+        })
+        .then(response => response.json())
+        .then(result => {
+            // print result on console
+            console.log(result);
+            // reload the whole DOM for display changes in inbox to take effect (post content change)
+            location.reload();
+        })
+        // display caught error
+        .catch(error => console.log(error));
+    })
 }

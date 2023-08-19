@@ -10,6 +10,8 @@ class User(AbstractUser):
 class Post(models.Model):
     content = models.TextField(blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)    # automatically populated with current date
+    edited = models.BooleanField(default=False)
+    edited_on = models.DateTimeField(auto_now=True)    # automatically populated with current date on every update of instance    
     author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user_posts")
     likes = models.IntegerField(default=0)
 
