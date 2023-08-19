@@ -146,37 +146,53 @@ def following(request):
 
 @login_required
 def edit_post(request, post_id):
-
     # only PUT method is required
     if request.method != "PUT":
-        return JsonResponse({
-            "error": "PUT request required."
-        }, status=400)  # Bad request
+        return JsonResponse({"error": "PUT request required."}, status=400)  # Bad request
     # in case its PUT method
     try:
         # get this post in a way that its not possible for a user, via any route, to edit another user’s posts
         this_post = Post.objects.get(author=request.user, pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({
-            "error": "Post not found."
-        }, status=404)  # Not Found
+        return JsonResponse({"error": "Post not found."}, status=404)  # Not Found
     else:
         put_data = json.loads(request.body)
         new_content = put_data.get("content")
-
-        if new_content:
+        
+        # only if new content is valid and not empty and is different from old content then update it
+        if new_content and new_content != this_post.content:
             this_post.content = new_content
             this_post.edited = True
             this_post.save()
+            # alternatively HttpResponse(status=204) means a success response with no content
+            return JsonResponse({"success": "This post was updated successfully."}, status=200)  # Success 
+        # otherwise invalid new content
+        return JsonResponse({"error": "Invalid new content."}, status=400)  # Bad request      
+            
 
-            return JsonResponse({
-                "success": "This post was updated successfully.",
-                # pass the new content to update it on page without reloading the page
-                "new_content": new_content,
-            }, status=200)  # Success (or HttpResponse(status=204) means a success response with no content)
+@login_required
+def post_reaction(request, post_id):
+    # only PUT method is required
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)  # Bad request
+    # in case its PUT method
+    try:
+        # get this post
+        this_post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        # here this_post is None
+        return JsonResponse({"error": "Post not found."}, status=404)  # Not Found
+    else:
+        put_data = json.loads(request.body)
+        reaction = put_data.get("reaction")
+
+        if reaction == 'like':
+            this_post.likes += 1
+            
+        elif reaction == 'unlike':
+            this_post.likes -= 1
         
-        return JsonResponse({
-            "error": "Invalid content."
-        }, status=400)  # Bad request
-    
+        this_post.save()
+        # alternatively HttpResponse(status=204) means a success response with no content
+        return JsonResponse({"success": f"This post was {reaction}d successfully."}, status=200)  # Success

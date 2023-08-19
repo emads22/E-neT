@@ -61,7 +61,6 @@
                                         <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         <!-- To ensure that we always retrieve the correct CSRF token and not the initial one, we add a data attribute to  save button where we can store the CSRF token value -->
-                                        <!-- also add data-bs-dismiss="modal" to close the modal on pressing 'save' -->
                                         <button type="button" id="save_btn_{{post.id}}" class="btn btn-primary" data-csrf="{{ csrf_token }}">Save changes</button>
                                         </div>
                                     </div>
@@ -73,8 +72,8 @@
                         <footer class="blockquote-footer">                        
                             <span>posted on </span>
                             <cite title="Source Title">{{post.date_posted}} {% if post.edited %}[Edited on {{post.edited_on}}]{% endif %}</cite> <br>
-                            <span class="list-inline-item">❤</span>
-                            <p class="list-inline-item">Likes {{post.likes}}</p> 
+                            <button id="postReaction_{{post.id}}" class="list-inline-item btn-like" data-reaction="unlike" data-csrf="{{ csrf_token }}">❤</button>
+                            <p class="list-inline-item">Likes <span id="postLikes_{{post.id}}">{{post.likes}}</span></p> 
                             <a href="#" class="list-inline-item">Comments</a>
                         </footer>
                     </blockquote>
