@@ -61,6 +61,7 @@
                                         <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         <!-- To ensure that we always retrieve the correct CSRF token and not the initial one, we add a data attribute to  save button where we can store the CSRF token value -->
+                                        <!-- also add data-bs-dismiss="modal" to close the modal on pressing 'save' -->
                                         <button type="button" id="save_btn_{{post.id}}" class="btn btn-primary" data-csrf="{{ csrf_token }}">Save changes</button>
                                         </div>
                                     </div>

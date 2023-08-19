@@ -18,11 +18,12 @@ function handle_post_editing() {
 
 
 function edit_post(post_id) {
-    const post_content = document.getElementById(`post_${post_id}`).textContent
+    const post_content = document.getElementById(`post_${post_id}`);
     const content_textarea = document.getElementById(`post_${post_id}_edit`);
     const save_btn = document.getElementById(`save_btn_${post_id}`);
+    const modal = document.getElementById(`editModal_${post_id}`);   
     // populate the textarea with old content
-    content_textarea.value = post_content;
+    content_textarea.value = post_content.textContent;
     // declare this variable here to be accessible in this scope not only below under (like global var)
     let new_content = "";
     // on change
@@ -54,8 +55,11 @@ function edit_post(post_id) {
         .then(result => {
             // print result on console
             console.log(result);
-            // reload the whole DOM for display changes in inbox to take effect (post content change)
-            location.reload();
+            // populate the post new content from result of response
+            post_content.textContent = result["new_content"];
+            // get the instance of the modal to close it in js without using 'data-bs-dismiss="modal"' on save button in template
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();    // close the modal
         })
         // display caught error
         .catch(error => console.log(error));

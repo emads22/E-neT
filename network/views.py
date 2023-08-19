@@ -154,7 +154,8 @@ def edit_post(request, post_id):
         }, status=400)  # Bad request
     # in case its PUT method
     try:
-        this_post = Post.objects.get(pk=post_id)
+        # get this post in a way that its not possible for a user, via any route, to edit another user’s posts
+        this_post = Post.objects.get(author=request.user, pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
         return JsonResponse({
@@ -170,7 +171,9 @@ def edit_post(request, post_id):
             this_post.save()
 
             return JsonResponse({
-                "success": "This post was updated successfully."
+                "success": "This post was updated successfully.",
+                # pass the new content to update it on page without reloading the page
+                "new_content": new_content,
             }, status=200)  # Success (or HttpResponse(status=204) means a success response with no content)
         
         return JsonResponse({
