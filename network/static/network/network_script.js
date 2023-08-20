@@ -21,7 +21,7 @@ function handle_post_editing() {
 
 
 function edit_post(post_id, post_content) {
-    
+    // catch the textarea content in the modal
     const content_textarea = document.getElementById(`post_${post_id}_edit`);
     const save_btn = document.getElementById(`save_btn_${post_id}`);
     const modal = document.getElementById(`editModal_${post_id}`);   
