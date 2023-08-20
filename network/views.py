@@ -120,13 +120,16 @@ def follow_unfollow(request, user_id, action):
     current_user = request.user
     if action == 'follow':
         profile_user.followers.add(current_user)
+        action_message = "started"
     # otherwise action == 'unfollow'
     else:
         profile_user.followers.remove(current_user)
+        action_message = "stopped"
 
     # # redirect to user profile page (same page) using the arg 'user_id'
     # return HttpResponseRedirect(reverse('profile', args=[user_id]))
-
+    
+    messages.success(request, f"You {action_message} following {profile_user.username.title()}")
     # alternatively: referring URL is the URL of the page that made the request (profile page)
     referring_URL = request.META.get('HTTP_REFERER')
     return HttpResponseRedirect(referring_URL)
@@ -148,51 +151,62 @@ def following(request):
 def edit_post(request, post_id):
     # only PUT method is required
     if request.method != "PUT":
-        return JsonResponse({"error": "PUT request required."}, status=400)  # Bad request
+        return JsonResponse({"message": ("error", "PUT request required only.")}, status=400)  # Bad request
     # in case its PUT method
     try:
         # get this post in a way that its not possible for a user, via any route, to edit another user’s posts
         this_post = Post.objects.get(author=request.user, pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({"error": "Post not found."}, status=404)  # Not Found
+        return JsonResponse({"message": ("error", "This post is not found.")}, status=404)  # Not Found
     else:
         put_data = json.loads(request.body)
         new_content = put_data.get("content")
+
+        if new_content == this_post.content:
+            return JsonResponse({"message": ("success", "No changes occurred. Enter new content to update the post.")}, status=200)  # Success
         
         # only if new content is valid and not empty and is different from old content then update it
-        if new_content and new_content != this_post.content:
+        elif new_content:
             this_post.content = new_content
             this_post.edited = True
             this_post.save()
             # alternatively HttpResponse(status=204) means a success response with no content
-            return JsonResponse({"success": "This post was updated successfully."}, status=200)  # Success 
+            return JsonResponse({
+                "message": ("success", "This post was updated successfully."),
+                "edited_content": new_content
+                }, status=200)  # Success 
+        
         # otherwise invalid new content
-        return JsonResponse({"error": "Invalid new content."}, status=400)  # Bad request      
+        return JsonResponse({"message": ("error", "Invalid new content.")}, status=400)  # Bad request      
             
 
 @login_required
 def post_reaction(request, post_id):
-    # only PUT method is required
-    if request.method != "PUT":
-        return JsonResponse({"error": "PUT request required."}, status=400)  # Bad request
+    # only GET method is required
+    if request.method != "GET":
+        return JsonResponse({"message": ("error", "GET request required only.")}, status=400)  # Bad request
     # in case its PUT method
     try:
         # get this post
         this_post = Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({"error": "Post not found."}, status=404)  # Not Found
+        return JsonResponse({"message": ("error", "This post is not found.")}, status=404)  # Not Found
     else:
-        put_data = json.loads(request.body)
-        reaction = put_data.get("reaction")
-        # add current user to this post likers
-        if reaction == 'like':
-            this_post.likers.add(request.user)
-        # remove current user from this post likers
-        elif reaction == 'unlike':
+        # if current user is among the likers of this post then pressing like button will remove him from this post likers (unlike the post)
+        if request.user in this_post.likers.all():
             this_post.likers.remove(request.user)
+            reaction = "unlike"
+        # otherwise add him to this post likers (like the post)
+        else:
+            this_post.likers.add(request.user)
+            reaction = "like"
         
         this_post.save()
         # alternatively HttpResponse(status=204) means a success response with no content
-        return JsonResponse({"success": f"This post was {reaction}d successfully."}, status=200)  # Success
+        return JsonResponse({
+            "message": ("success", f"This post was {reaction}d successfully."),
+            "total_likes": this_post.likers.count()
+            }, status=200)  # Success
+    

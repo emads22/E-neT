@@ -1,9 +1,9 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <!-- display messages using the messages tools in Django -->
+    <!-- display messages using the messages framework in Django -->
     {% if messages %}
-        <ul class="messages">
+        <ul id="messages" class="messages">
             {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
             {% endfor %}
@@ -39,6 +39,8 @@
                 </div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
+                        <!-- set a message div -->
+                        <p id="message_post_{{post.id}}"></p>
                         <p>
                             <span id="post_{{post.id}}" class="list-inline-item">{{post.content}}</span>                        
                             {% if user.is_authenticated and user == post.author %}
@@ -72,9 +74,9 @@
                         <footer class="blockquote-footer">                        
                             <span>posted on </span>
                             <cite title="Source Title">{{post.date_posted}} {% if post.edited %}[Edited on {{post.edited_on}}]{% endif %}</cite> <br>
-                            <button id="postReaction_{{post.id}}" class="list-inline-item btn-like" data-reaction="unlike" data-csrf="{{ csrf_token }}">❤</button>
-                            <p class="list-inline-item">Likes <span id="postLikes_{{post.id}}">{{post.likers.count}}</span></p> 
-                            <a href="#" class="list-inline-item">Comments</a>
+                            <button id="postReaction_{{post.id}}" class="list-inline-item btn-like">❤</button>
+                            <p class="list-inline-item"><span id="postLikes_{{post.id}}">{{post.likers.count}}</span> Likes</p> 
+                            <!-- <a href="#" class="list-inline-item">Comments</a> -->
                         </footer>
                     </blockquote>
                 </div>
