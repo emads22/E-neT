@@ -13,7 +13,7 @@ class Post(models.Model):
     edited = models.BooleanField(default=False)
     edited_on = models.DateTimeField(auto_now=True)    # automatically populated with current date on every update of instance    
     author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user_posts")
-    likes = models.IntegerField(default=0)
+    likers = models.ManyToManyField(User, blank=True, null=True, related_name="liked_posts")
 
     def __str__(self):
         return f'"{self.content}" -- (posted on {self.date_posted.strftime("%b. %d, %Y, %I:%M %p")} by {self.author})'

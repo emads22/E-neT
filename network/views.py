@@ -186,12 +186,12 @@ def post_reaction(request, post_id):
     else:
         put_data = json.loads(request.body)
         reaction = put_data.get("reaction")
-
+        # add current user to this post likers
         if reaction == 'like':
-            this_post.likes += 1
-            
+            this_post.likers.add(request.user)
+        # remove current user from this post likers
         elif reaction == 'unlike':
-            this_post.likes -= 1
+            this_post.likers.remove(request.user)
         
         this_post.save()
         # alternatively HttpResponse(status=204) means a success response with no content

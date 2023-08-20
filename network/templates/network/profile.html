@@ -73,8 +73,8 @@
                         <footer class="blockquote-footer">                        
                             <span>posted on </span>
                             <cite title="Source Title">{{post.date_posted}} {% if post.edited %}[Edited on {{post.edited_on}}]{% endif %}</cite> <br>
-                            <span class="list-inline-item">❤</span>
-                            <p class="list-inline-item">Likes {{post.likes}}</p> 
+                            <button id="postReaction_{{post.id}}" class="list-inline-item btn-like" data-reaction="unlike" data-csrf="{{ csrf_token }}">❤</button>
+                            <p class="list-inline-item">Likes <span id="postLikes_{{post.id}}">{{post.likers.count}}</span></p> 
                             <a href="#" class="list-inline-item">Comments</a>
                         </footer>
                     </blockquote>
