@@ -16,17 +16,19 @@ a {
 
 
 /* .bg-card, .categories */
-.bg-navbar {
+.bg-navbar, .card-body {
     background-color: #CEDEBD;
 }
 
 
-.card-header {
+.card-header, .modal-header {
     background-color: #9EB384;
 }
 
-.card-body {
+.new-content {
     background-color: #CEDEBD;
+    color: #435334;
+    border-color: #435334;
 }
 
 .card-header a, .card-body a {
@@ -34,7 +36,9 @@ a {
     font-weight: bold;
 }
 
-
+.modal-body, .modal-footer {
+    background-color: #FAF1E4;
+}
 
 
 

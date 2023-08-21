@@ -80,7 +80,9 @@ function handle_post_reaction() {
     // catch all like buttons
     const post_like_btns = document.querySelectorAll(".btn-like");
     post_like_btns.forEach(like_btn => {
-        like_btn.addEventListener("click", () => {
+        like_btn.addEventListener("click", event => {
+            // prevent the default <a> (link) behavior
+            event.preventDefault();
             // extract post ID from the like button ID (its 'postReaction_{ID}')
             const post_id = like_btn.id.split("_")[1]; 
             post_reaction(post_id);
@@ -101,6 +103,15 @@ function post_reaction(post_id) {
         console.log(result);
         // populate likes wth the new value
         likes.innerText = result["total_likes"];
+        // navigate to heart icon
+        const heart_icon = document.getElementById(`iconHeart_${post_id}`);        
+        // in case heart icon is blank then make it filled to indicate post is liked
+        if (heart_icon.src.includes("heart-blank.png")) {
+            heart_icon.src = "/static/network/icons/heart-filled.png";
+        // otherwise turn it back to blank to indicate post is unliked
+        } else {
+            heart_icon.src = "/static/network/icons/heart-blank.png";
+        }
         // display message on webpage
         load_temp_message(post_id, result["message"]);
     })
@@ -116,9 +127,12 @@ function post_reaction(post_id) {
 function load_temp_message(post_id, message) {
     // navigate to message element
     const message_element = document.getElementById(`message_post_${post_id}`);
-    message_element.innerHTML = `${message[0]} - ${message[1]}`;
-    // after 2 seconds clear the message
+    // message response is a tuple passed from views.py where message[0] is the type (danger, sucess,...) and message[1] is the actual message
+    message_element.innerHTML = `${message[1]}`;
+    message_element.className = `alert alert-${message[0]}`;
+    // after 2 seconds clear the message and its class
     setTimeout(function() {
         message_element.innerHTML = "";
+        message_element.className = "";
     }, 2000);  // execute after 2 second (2000 ms)
 }

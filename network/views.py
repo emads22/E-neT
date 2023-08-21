@@ -13,7 +13,7 @@ from .models import User, Post, Comment
 
 def pagination(request, objects_list):
     # pagination to show 10 objects (posts) per page
-    paginator = Paginator(objects_list, 10)
+    paginator = Paginator(objects_list, 2)
     # get requested page number from url param
     page_number = request.GET.get('page') 
     # get page object for this page requested 
@@ -151,20 +151,20 @@ def following(request):
 def edit_post(request, post_id):
     # only PUT method is required
     if request.method != "PUT":
-        return JsonResponse({"message": ("error", "PUT request required only.")}, status=400)  # Bad request
+        return JsonResponse({"message": ("danger", "PUT request required only.")}, status=400)  # Bad request
     # in case its PUT method
     try:
         # get this post in a way that its not possible for a user, via any route, to edit another user’s posts
         this_post = Post.objects.get(author=request.user, pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({"message": ("error", "This post is not found.")}, status=404)  # Not Found
+        return JsonResponse({"message": ("danger", "This post is not found.")}, status=404)  # Not Found
     else:
         put_data = json.loads(request.body)
         new_content = put_data.get("content")
 
         if new_content == this_post.content:
-            return JsonResponse({"message": ("success", "No changes occurred. Enter new content to update the post.")}, status=200)  # Success
+            return JsonResponse({"message": ("warning", "No changes occurred. Enter new content to update the post.")}, status=200)  # Success
         
         # only if new content is valid and not empty and is different from old content then update it
         elif new_content:
@@ -178,21 +178,21 @@ def edit_post(request, post_id):
                 }, status=200)  # Success 
         
         # otherwise invalid new content
-        return JsonResponse({"message": ("error", "Invalid new content.")}, status=400)  # Bad request      
+        return JsonResponse({"message": ("danger", "Invalid new content.")}, status=400)  # Bad request      
             
 
 @login_required
 def post_reaction(request, post_id):
     # only GET method is required
     if request.method != "GET":
-        return JsonResponse({"message": ("error", "GET request required only.")}, status=400)  # Bad request
+        return JsonResponse({"message": ("danger", "GET request required only.")}, status=400)  # Bad request
     # in case its PUT method
     try:
         # get this post
         this_post = Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({"message": ("error", "This post is not found.")}, status=404)  # Not Found
+        return JsonResponse({"message": ("danger", "This post is not found.")}, status=404)  # Not Found
     else:
         # if current user is among the likers of this post then pressing like button will remove him from this post likers (unlike the post)
         if request.user in this_post.likers.all():
