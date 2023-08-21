@@ -23,14 +23,14 @@ def pagination(request, objects_list):
 
 
 def index(request):
-    param_all = request.GET.get("all")
+    # param_all = request.GET.get("all")
     # get all posts in reverse chronological order
     all_posts = Post.objects.order_by("-date_posted").all()
     
     return render(request, "network/index.html", context={
         'page': pagination(request, all_posts),
         # when clicking 'All Posts' go to index page (where all posts displayed) but remove create post div even if user is logged in
-        'creation_available': False if param_all else True,
+        # 'creation_available': False if param_all else True,
     })
 
 
@@ -84,6 +84,15 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+    
+
+def all_posts(request):
+    # get all posts in reverse chronological order
+    all_posts = Post.objects.order_by("-date_posted").all()
+    
+    return render(request, "network/all_posts.html", context={
+        'page': pagination(request, all_posts),
+        })
 
 
 @login_required
