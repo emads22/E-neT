@@ -10,41 +10,49 @@
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
         <script src="{% static 'network/network_script.js' %}"></script>
+        <!-- icons -->
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     </head>
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'index' %}">Network</a>
+        <nav class="navbar navbar-expand-lg bg-navbar p-3 fs-5">
+            <a class="navbar-brand fs-3" href="{% url 'index' %}">
+                <img class="me-2 px-2 home-icon" src="{% static 'network/icons/home.png' %}" alt="home icon"><strong>EneT</strong>
+            </a>
           
-            <div>
-              <ul class="navbar-nav mr-auto">
+            <div class="container-fluid">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item nav-left">
+                        <!-- add a param 'all' to send it to 'index' view -->
+                    <a class="nav-link" href="{% url 'index' %}?all=True">All Posts</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'following' %}">Following</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
+                    <li class="nav-item d-flex justify-content-end">
                         <a class="nav-link" href="{% url 'profile' user.id %}"><strong>{{ user.username }}</strong></a>
                     </li>
-                {% endif %}
-                <li class="nav-item">
-                    <!-- add a param 'all' to send it to 'index' view -->
-                  <a class="nav-link" href="{% url 'index' %}?all=True">All Posts</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'following' %}">Following</a>
-                    </li>
-                    <li class="nav-item">
+                    <li class="nav-item d-flex justify-content-end">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
                 {% else %}
-                    <li class="nav-item">
+                    <li class="nav-item d-flex justify-content-end">
                         <a class="nav-link" href="{% url 'login' %}">Log In</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
                 {% endif %}
-              </ul>
+                </ul>
             </div>
-          </nav>
+        </nav>
+        
         
         <div class="body">
             {% block body %}

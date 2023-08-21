@@ -1,0 +1,56 @@
+body {
+    color: #435334;
+    background-color: #FAF1E4;
+    margin: 0;
+    padding: 0;
+}
+
+
+a {
+    text-decoration: none;
+}
+
+.home-icon {
+    margin-top: -5px;
+}
+
+
+/* .bg-card, .categories */
+.bg-navbar {
+    background-color: #CEDEBD;
+}
+
+
+.card-header {
+    background-color: #9EB384;
+}
+
+.card-body {
+    background-color: #CEDEBD;
+}
+
+.card-header a, .card-body a {
+    color: #435334;
+    font-weight: bold;
+}
+
+
+
+
+
+
+.messages {
+    /* remove bullet points from this list items */
+    list-style: none;
+}
+
+.btn {
+    background-color: #5C703E; /* 4D5E2E */
+    color: #fff;
+}
+
+.btn:hover {
+    background-color: #9EB384;
+    color: #fff;
+}
+

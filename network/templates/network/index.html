@@ -3,39 +3,44 @@
 {% block body %}
     <!-- display messages using the messages framework in Django -->
     {% if messages %}
-        <ul id="messages" class="messages">
+        <ul id="messages" class="messages alert alert-secondary px-4">
             {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <li class="message fs-5 p-3">{{ message }}</li>
             {% endfor %}
         </ul>
         <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 2 seconds here -->
         <meta http-equiv="refresh" content="2;url={% url 'index' %}">
     {% endif %}
 
-    {% if user.is_authenticated and creation_available %}
-        <div id="create-view">
-            <!-- <h3>New Post</h3> -->
-            <form id="create-form" action="{% url 'create' %}" method="post">
-                {% csrf_token %}
+    <div class="mx-4 px-4">
+        {% if user.is_authenticated and creation_available %}
+            <div id="create-view" class="pt-4">
+                <!-- <h3>New Post</h3> -->
+                <form id="create-form" action="{% url 'create' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="create-content" class="form-label"><h4>New Post</h4></label>
+                        <textarea class="form-control" id="create-content" placeholder="Content" rows="4" cols="40" name="content"></textarea>
+                    </div>                    
+                    <button type="submit" class="btn btn-lg">Post</button>                    
+                </form>
+            </div>
+        {% else %}
+            <h2 class="pt-4">
+                All Posts
+            </h2>
+        {% endif %}
+    </div>
 
-                <div class="form-group">
-                    <h4>New Post</h4> 
-                    <textarea class="form-control" id="create-content" placeholder="Content" rows="6" cols="40" name="content"></textarea>
-                </div> 
-                
-                <button type="submit" class="btn btn-primary">Post</button>
-            </form>
-        </div>
-    {% else %}
-        <h1>All Posts</h1>
-    {% endif %}
-
-    <div>
+    <div class="mx-4 px-4">
         <!-- 'page' or 'page.object_list' instead of 'posts' to get the number of posts set per page -->
         {% for post in page %}
-            <div class="card">
-                <div class="card-header">
-                    <h5><a href="{% url 'profile' post.author.id %}">@{{post.author}}</a></h5>
+            <div class="card my-5 rounded-3">
+                <div class="card-header d-flex justify-content-between">
+                    <a class="fs-4" href="{% url 'profile' post.author.id %}">@{{post.author}}</a>
+                    {% if post.edited %}
+                        <span class="mt-1 justify-content-end">Edited on <em class="mx-2">{{post.edited_on}}</em></span>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
@@ -73,7 +78,7 @@
                         
                         <footer class="blockquote-footer">                        
                             <span>posted on </span>
-                            <cite title="Source Title">{{post.date_posted}} {% if post.edited %}[Edited on {{post.edited_on}}]{% endif %}</cite> <br>
+                            <cite class="mx-2" title="Source Title">{{post.date_posted}}</cite> <br>
                             <button id="postReaction_{{post.id}}" class="list-inline-item btn-like">❤</button>
                             <p class="list-inline-item"><span id="postLikes_{{post.id}}">{{post.likers.count}}</span> Likes</p> 
                             <!-- <a href="#" class="list-inline-item">Comments</a> -->
