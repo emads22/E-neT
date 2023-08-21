@@ -14,41 +14,20 @@
         <meta http-equiv="refresh" content="2;url={% url 'index' %}">
     {% endif %}
 
-    <div class="mx-4 px-4">
-        {% if user.is_authenticated %}
-            <div id="create-section" class="pt-4">            
-                <form id="create-form" action="{% url 'create' %}" method="post" class="pt-3 row row-cols-lg-auto g-3 d-flex justify-content-center align-items-center">
-                    {% csrf_token %}
-                    <div class="mx-2">
-                        <label for="create-content" class="form-label"><h3>New Post</h3></label>
-                    </div>
-
-                    <div class="mx-2">
-                        <div class="input-group">
-                            <textarea class="form-control new-content rounded-3 fs-5" id="create-content" placeholder="Content" rows="3" cols="100" name="content"></textarea>
-                        </div>
-                    </div>
-                
-                    <div class="mx-2">
-                    <button type="submit" class="px-5 btn btn-lg">Post</button>
-                    </div>
-                </form> 
-            </div>           
-        {% else %}
-            <h2 id="main-heading" class="pt-4">
-                All Posts
-            </h2>
-        {% endif %}
+    <div class="mx-5 px-5">
+        <h2 class="pt-4">
+            Homepage
+        </h2>
     </div>
 
-    <div class="mx-4 px-4">
+    <div class="mx-5 px-5">
         <!-- 'page' or 'page.object_list' instead of 'posts' to get the number of posts set per page -->
         {% for post in page %}
-            <div class="card my-5 rounded-3">
+            <div class="card my-3 rounded-3">
                 <div class="card-header d-flex justify-content-between">
                     <a class="fs-4" href="{% url 'profile' post.author.id %}">@{{post.author}}</a>
                     {% if post.edited %}
-                        <span class="mt-1 justify-content-end">Edited on <em class="mx-2">{{post.edited_on}}</em></span>
+                        <span class="mt-1 justify-content-end fs-6">Edited on <em class="mx-2">{{post.edited_on}}</em></span>
                     {% endif %}
                 </div>
                 <div class="card-body">
@@ -59,7 +38,7 @@
                             <span id="post_{{post.id}}" class="list-inline-item mb-3">{{post.content}}</span>                        
                             {% if user.is_authenticated and user == post.author %}
                                 <!-- Link trigger modal, add id related to the post in order to catch it in js script -->                            
-                                <a href="#" id="editLink_{{post.id}}" class="list-inline-item edit-link mx-3" data-bs-toggle="modal" data-bs-target="#editModal_{{post.id}}">
+                                <a href="" id="editLink_{{post.id}}" class="list-inline-item edit-link mx-3" data-bs-toggle="modal" data-bs-target="#editModal_{{post.id}}">
                                     Edit
                                 </a>
                                 
@@ -85,7 +64,7 @@
                             {% endif %}
                         </p>
                         
-                        <footer class="blockquote-footer">                        
+                        <footer class="blockquote-footer fs-6">                        
                             <span class="">posted on </span>
                             <cite class="mx-2" title="Source Title">{{post.date_posted}}</cite> 
                         </footer>
@@ -94,7 +73,7 @@
                             <!-- initially check if current user already liked this post to load the relative heart icon (blank or filled) -->
                             <img id="iconHeart_{{post.id}}" src="{% if user in post.likers.all %} {% static 'network/icons/heart-filled.png' %} {% else %} {% static 'network/icons/heart-blank.png' %} {% endif %}" alt="heart icon">
                         </a>
-                        <p class="list-inline-item mb-2"><span id="postLikes_{{post.id}}" class="me-2">{{post.likers.count}}</span>Likes</p> 
+                        <p class="list-inline-item mb-2 fs-6"><span id="postLikes_{{post.id}}" class="me-2">{{post.likers.count}}</span>Likes</p> 
                         <!-- <a href="#" class="list-inline-item">Comments</a> -->                        
                     </blockquote>
                 </div>

@@ -13,7 +13,7 @@ from .models import User, Post, Comment
 
 def pagination(request, objects_list):
     # pagination to show 10 objects (posts) per page
-    paginator = Paginator(objects_list, 2)
+    paginator = Paginator(objects_list, 10)
     # get requested page number from url param
     page_number = request.GET.get('page') 
     # get page object for this page requested 
@@ -104,7 +104,7 @@ def create(request):
             new_post.save()
             messages.success(request, 'Post created successfully!')
         else:
-            messages.error(request, 'Invalid content.')
+            messages.error(request, 'Invalid new content.')
 
     # eventually redirect to homepage in case of success or failure of post creation (even in case of GET method)
     return HttpResponseRedirect(reverse('index'))
@@ -167,13 +167,13 @@ def edit_post(request, post_id):
         this_post = Post.objects.get(author=request.user, pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({"message": ("danger", "This post is not found.")}, status=404)  # Not Found
+        return JsonResponse({"message": ("danger", "Post not found.")}, status=404)  # Not Found
     else:
         put_data = json.loads(request.body)
         new_content = put_data.get("content")
 
         if new_content == this_post.content:
-            return JsonResponse({"message": ("warning", "No changes occurred. Enter new content to update the post.")}, status=200)  # Success
+            return JsonResponse({"message": ("warning", "No changes occurred.")}, status=200)  # Success
         
         # only if new content is valid and not empty and is different from old content then update it
         elif new_content:
@@ -182,7 +182,7 @@ def edit_post(request, post_id):
             this_post.save()
             # alternatively HttpResponse(status=204) means a success response with no content
             return JsonResponse({
-                "message": ("success", "This post was updated successfully."),
+                "message": ("success", "Post updated successfully!"),
                 "edited_content": new_content
                 }, status=200)  # Success 
         
@@ -201,7 +201,7 @@ def post_reaction(request, post_id):
         this_post = Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
         # here this_post is None
-        return JsonResponse({"message": ("danger", "This post is not found.")}, status=404)  # Not Found
+        return JsonResponse({"message": ("danger", "Post not found.")}, status=404)  # Not Found
     else:
         # if current user is among the likers of this post then pressing like button will remove him from this post likers (unlike the post)
         if request.user in this_post.likers.all():
@@ -215,7 +215,7 @@ def post_reaction(request, post_id):
         this_post.save()
         # alternatively HttpResponse(status=204) means a success response with no content
         return JsonResponse({
-            "message": ("success", f"This post was {reaction}d successfully."),
+            "message": ("success", f"You {reaction}d this post."),
             "total_likes": this_post.likers.count()
             }, status=200)  # Success
     

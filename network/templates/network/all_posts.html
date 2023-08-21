@@ -14,16 +14,16 @@
         <meta http-equiv="refresh" content="2;url={% url 'index' %}">
     {% endif %}
 
-    <div class="mx-4 px-4">
+    <div class="mx-5 px-5">
         <h2 class="pt-4">
             All Posts
         </h2>
     </div>
 
-    <div class="mx-4 px-4">
+    <div class="mx-5 px-5">
         <!-- 'page' or 'page.object_list' instead of 'posts' to get the number of posts set per page -->
         {% for post in page %}
-            <div class="card my-5 rounded-3">
+            <div class="card my-3 rounded-3">
                 <div class="card-header d-flex justify-content-between">
                     <a class="fs-4" href="{% url 'profile' post.author.id %}">@{{post.author}}</a>
                     {% if post.edited %}

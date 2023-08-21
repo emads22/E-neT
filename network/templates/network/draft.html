@@ -1,0 +1,26 @@
+<div class="mx-4 px-4">
+    {% if user.is_authenticated %}
+        <div id="create-section" class="pt-4">            
+            <form id="create-form" action="{% url 'create' %}" method="post" class="pt-3 row row-cols-lg-auto g-3 d-flex justify-content-center align-items-center">
+                {% csrf_token %}
+                <div class="mx-2">
+                    <label for="create-content" class="form-label"><h3>New Post</h3></label>
+                </div>
+
+                <div class="mx-2">
+                    <div class="input-group">
+                        <textarea class="form-control new-content rounded-3 fs-5" id="create-content" placeholder="Content" rows="3" cols="100" name="content"></textarea>
+                    </div>
+                </div>
+            
+                <div class="mx-2">
+                <button type="submit" class="px-5 btn btn-lg">Post</button>
+                </div>
+            </form> 
+        </div>           
+    {% else %}
+        <h2 id="main-heading" class="pt-4">
+            All Posts
+        </h2>
+    {% endif %}
+</div>
