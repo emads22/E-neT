@@ -26,6 +26,7 @@ def pagination(request, objects_list):
 
 
 # <==================================================<Views Functions>==================================================>
+@login_required
 def index(request):
     # get all posts in reverse chronological order
     all_posts = Post.objects.order_by("-date_posted").all()
