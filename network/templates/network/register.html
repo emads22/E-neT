@@ -2,29 +2,53 @@
 
 {% block body %}
 
-    <h2>Register</h2>
-
     {% if message %}
-        <div>{{ message }}</div>
+        <div class="alert alert-secondary p-4 fs-5" role="alert">
+            {{ message }}
+        </div>
+        <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 2 seconds here -->
+        <meta http-equiv="refresh" content="2;url={% url 'register' %}">
     {% endif %}
 
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
 
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    <div class="row container-fluid">
+        
+        <div class="col-auto m-5 p-5">
+            <h1 class="">Discover, Engage, and Share.</h1>
+            <h1 class="">Welcome to<strong class="title ms-4">E:neT</strong></h1>        
+        </div>
+
+        <div class="col-auto m-5 p-5 container">
+            <div class="d-flex justify-content-center">
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="col-auto mb-4">
+                        <input autofocus class="form-control form-control-lg" type="text" name="username" placeholder="Username">
+                    </div>
+                    <div class="col-auto mb-4">
+                        <input class="form-control form-control-lg" type="email" name="email" placeholder="Email Address">
+                    </div>
+                    <div class="col-auto mb-4">
+                        <input class="form-control form-control-lg" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="col-auto mb-4">
+                        <input class="form-control form-control-lg" type="password" name="confirmation" placeholder="Confirm Password">
+                    </div>
+                    
+                    <div class="col-auto">
+                        <button type="submit" class="form-control btn btn-lg mt-2 mb-4 fs-4">
+                            Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <p class="text-center mt-2 mb-4 fs-4">
+                Already have an account? <a href="{% url 'login' %}" class="mx-2 login-link"><strong>Log In here.</strong></a>
+            </p>
+        </div>
+
+    </div>
 
 {% endblock %}

@@ -14,10 +14,16 @@
         <meta http-equiv="refresh" content="2;url={% url 'index' %}">
     {% endif %}
 
-    <div class="mx-5 px-5">
-        <h2 class="pt-4">
-            Following
-        </h2>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h2 class="py-4 ps-5 ms-5 latest-title"><strong>Latest from Followed Profiles</strong></h2>
+        </div>
+        <div class="col-md-6">
+            <div class="col-auto text-end py-4 pe-5 me-5">
+                <h3><strong class="title">E:neT</strong></h3>
+                <h5 class="">Exploring Ideas, Sharing Stories, Building Connections</h5>
+            </div>
+        </div>
     </div>
 
     <div class="mx-5 px-5">
@@ -51,7 +57,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body pt-4 px-4 pb-0">
-                                        <textarea class="p-1 new-content rounded-3" rows="4" cols="46" id="post_{{post.id}}_edit"></textarea>
+                                        <textarea class="p-1 new-content rounded-3" rows="8" cols="46" id="post_{{post.id}}_edit"></textarea>
                                         </div>
                                         <div class="modal-footer pb-3">
                                         <button type="button" class="btn btn-lg me-3" data-bs-dismiss="modal">Close</button>

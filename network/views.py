@@ -8,9 +8,11 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 import json
 
-from .models import User, Post, Comment
+from .models import User, Post
 
 
+
+# <==================================================<Helper Tools>==================================================>
 def pagination(request, objects_list):
     # pagination to show 10 objects (posts) per page
     paginator = Paginator(objects_list, 10)
@@ -22,77 +24,15 @@ def pagination(request, objects_list):
     return page
 
 
+
+# <==================================================<Views Functions>==================================================>
 def index(request):
-    # param_all = request.GET.get("all")
     # get all posts in reverse chronological order
     all_posts = Post.objects.order_by("-date_posted").all()
     
     return render(request, "network/index.html", context={
-        'page': pagination(request, all_posts),
-        # when clicking 'All Posts' go to index page (where all posts displayed) but remove create post div even if user is logged in
-        # 'creation_available': False if param_all else True,
+        'page': pagination(request, all_posts)
     })
-
-
-def login_view(request):
-    if request.method == "POST":
-
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("index"))
-        else:
-            return render(request, "network/login.html", {
-                "message": "Invalid username and/or password."
-            })
-    else:
-        return render(request, "network/login.html")
-    
-
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect(reverse("index"))
-
-
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "network/register.html", {
-                "message": "Passwords must match."
-            })
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "network/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
-    else:
-        return render(request, "network/register.html")
-    
-
-def all_posts(request):
-    # get all posts in reverse chronological order
-    all_posts = Post.objects.order_by("-date_posted").all()
-    
-    return render(request, "network/all_posts.html", context={
-        'page': pagination(request, all_posts),
-        })
 
 
 @login_required
@@ -219,3 +159,56 @@ def post_reaction(request, post_id):
             "total_likes": this_post.likers.count()
             }, status=200)  # Success
     
+
+
+# <==================================================<Given Functions>==================================================>
+def login_view(request):
+    if request.method == "POST":
+
+        # Attempt to sign user in
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        # Check if authentication successful
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "network/login.html", {
+                "message": "Invalid username and/or password."
+            })
+    else:
+        return render(request, "network/login.html")
+    
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
+
+
+def register(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        email = request.POST["email"]
+
+        # Ensure password matches confirmation
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "network/register.html", {
+                "message": "Passwords must match."
+            })
+
+        # Attempt to create new user
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+        except IntegrityError:
+            return render(request, "network/register.html", {
+                "message": "Username already taken."
+            })
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "network/register.html")

@@ -1,30 +1,48 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-
-    {% if login_first %}
-        <h2>Login Required</h2>
-        <p>Please log in first to access this page.</p>
-        <a href="{% url 'login' %}">Log in</a>
-    {% else %}
-        <h2>Login</h2>
-
-        {% if message %}
-            <div>{{ message }}</div>
-        {% endif %}
-
-        <form action="{% url 'login' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Password">
-            </div>
-            <input class="btn btn-primary" type="submit" value="Login">
-        </form>
-
-        Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+    
+    {% if message %}
+        <div class="alert alert-secondary p-4 fs-5" role="alert">
+            {{ message }}
+        </div>
+        <!-- The meta tag with http-equiv="refresh" attribute reloads the page after 2 seconds here -->
+        <meta http-equiv="refresh" content="2;url={% url 'login' %}">
     {% endif %}
+
+
+    <div class="row container-fluid">
+
+        <div class="col-auto m-5 p-5">
+            <h1 class="">Discover, Engage, and Share.</h1>
+            <h1 class="">Welcome to<strong class="title ms-4">E:neT</strong></h1>        
+        </div>
+
+        <div class="col-auto m-5 p-5 container">
+            <div class="d-flex justify-content-center">
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="col-auto mb-4">
+                        <input autofocus class="form-control form-control-lg" type="text" name="username" placeholder="Username">
+                    </div>
+                    <div class="col-auto mb-4">
+                        <input class="form-control form-control-lg" type="password" name="password" placeholder="Password">
+                    </div>
+                    
+                    <div class="col-auto">
+                        <button type="submit" class="form-control btn btn-lg mt-2 mb-4 fs-4">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <p class="text-center mt-2 mb-4 fs-4">
+                Don't have an account? <a href="{% url 'register' %}" class="mx-2 register-link"><strong>Register here.</strong></a>
+            </p>
+        </div>
+
+    </div>
 
 {% endblock %}
