@@ -31,7 +31,8 @@ def index(request):
     all_posts = Post.objects.order_by("-date_posted").all()
     
     return render(request, "network/index.html", context={
-        'page': pagination(request, all_posts)
+        'page': pagination(request, all_posts),
+        'heading': "Latest Posts",
     })
 
 
@@ -56,10 +57,10 @@ def profile(request, user_id):
     profile_user_posts = profile_user.user_posts.order_by("-date_posted").all()
 
     return render(request, "network/profile.html", context={
-        'following': profile_user.following.all(),
-        'followers': profile_user.followers.all(),
         'page': pagination(request, profile_user_posts),
         'profile_user': profile_user,
+        'following': profile_user.following.all(),
+        'followers': profile_user.followers.all(),        
     })
 
 
@@ -91,8 +92,9 @@ def following(request):
     # 'author__in' in Django is used to filter querysets based on a list of values (like list of authors instead of passing one author)
     followed_users_posts = Post.objects.filter(author__in=followed_users).order_by("-date_posted").all()
     
-    return render(request, "network/following.html", context={
+    return render(request, "network/index.html", context={
         'page': pagination(request, followed_users_posts),
+        'heading': "Latest from Followed Profiles",
     })
 
 

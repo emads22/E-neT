@@ -136,3 +136,4 @@ function load_temp_message(post_id, message) {
         message_element.className = "";
     }, 2000);  // execute after 2 second (2000 ms)
 }
+

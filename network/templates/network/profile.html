@@ -61,10 +61,25 @@
                         <!-- set a message div -->
                         <p id="message_post_{{post.id}}" role="alert"></p>
                         <p>
-                            <span id="post_{{post.id}}" class="list-inline-item mb-3">{{post.content}}</span>                        
+                            <span id="post_{{post.id}}" class="list-inline-item mb-3">{{post.content}}</span> 
+                        </p>
+                        
+                        <footer class="blockquote-footer fs-6">                        
+                            <span class="">posted on </span>
+                            <cite class="mx-2" title="Source Title">{{post.date_posted}}</cite> 
+                        </footer>
+                        
+                        {% if user.is_authenticated %}
+                            <a href="" id="postReaction_{{post.id}}" class="list-inline-item btn-like me-3">
+                                <!-- initially check if current user already liked this post to load the relative heart icon (blank or filled) -->
+                                <img id="iconHeart_{{post.id}}" src="{% if user in post.likers.all %} {% static 'network/icons/heart-filled.png' %} {% else %} {% static 'network/icons/heart-blank.png' %} {% endif %}" alt="heart icon">
+                            </a>
+                        {% endif %}
+                        <p class="list-inline-item mb-2 fs-6">
+                            <span id="postLikes_{{post.id}}" class="me-2">{{post.likers.count}}</span>Likes
                             {% if user.is_authenticated and user == post.author %}
                                 <!-- Link trigger modal, add id related to the post in order to catch it in js script -->                            
-                                <a href="" id="editLink_{{post.id}}" class="list-inline-item edit-link mx-3" data-bs-toggle="modal" data-bs-target="#editModal_{{post.id}}">
+                                <a href="" id="editLink_{{post.id}}" class="list-inline-item edit-link ms-3 fs-5" data-bs-toggle="modal" data-bs-target="#editModal_{{post.id}}">
                                     Edit
                                 </a>
                                 
@@ -88,20 +103,7 @@
                                     </div>
                                 </div>
                             {% endif %}
-                        </p>
-                        
-                        <footer class="blockquote-footer fs-6">                        
-                            <span class="">posted on </span>
-                            <cite class="mx-2" title="Source Title">{{post.date_posted}}</cite> 
-                        </footer>
-                        
-                        {% if user.is_authenticated %}
-                            <a href="" id="postReaction_{{post.id}}" class="list-inline-item btn-like me-3">
-                                <!-- initially check if current user already liked this post to load the relative heart icon (blank or filled) -->
-                                <img id="iconHeart_{{post.id}}" src="{% if user in post.likers.all %} {% static 'network/icons/heart-filled.png' %} {% else %} {% static 'network/icons/heart-blank.png' %} {% endif %}" alt="heart icon">
-                            </a>
-                        {% endif %}
-                        <p class="list-inline-item mb-2 fs-6"><span id="postLikes_{{post.id}}" class="me-2">{{post.likers.count}}</span>Likes</p> 
+                        </p> 
                         <!-- <a href="#" class="list-inline-item">Comments</a> -->                        
                     </blockquote>
                 </div>
