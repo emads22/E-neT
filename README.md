@@ -1,7 +1,7 @@
 # E:neT Social Network App
 
 ## Overview:
-E:neT is a Twitter-like social network website for making posts and following users. This application was developed as part of my [**CS50W**](https://cs50.harvard.edu/web/2020/) fourth project in 2023. You can explore its development on [me/50](https://github.com/me50/emads22/tree/web50/projects/2020/x/network) repository.
+E:neT is a Twitter-like social network website for making posts and following users. This application was developed as part of my [**CS50W Fourth Project**](https://cs50.harvard.edu/web/2020/) in 2023. You can explore its development on [me/50](https://github.com/me50/emads22/tree/web50/projects/2020/x/network) repository.
 
 ---
 
