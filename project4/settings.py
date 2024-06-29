@@ -101,6 +101,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Configure the default AutoField type used by Django for model primary keys.
+# By default, Django uses 'django.db.models.AutoField' for models that do not
+# explicitly define a primary key. This AutoField automatically assigns a unique
+# integer value to each new instance of a model. Setting this value ensures
+# compatibility with Django's default behavior and best practices.
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
